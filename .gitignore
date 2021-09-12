@@ -1,0 +1,18 @@
+# Ignore extensionless files
+*
+!*/
+!*.*
+
+# Include Makefile back
+!*/Makefile
+
+# Ignore config folders
+**/.*
+
+# Ignore temp folders
+**/temp
+**/tmp
+**/obj
+
+# Ignore gcc compilation files
+**/*.o
