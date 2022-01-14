@@ -321,8 +321,8 @@ static int my_read(const char *path, char *buf, size_t size, off_t offset, struc
 	NodeStruct *iNode = myFileSystem.nodes[fi->fh];	
 
     // if the offset is bigger than the stored data from the iNode, it goes outside the file
-    if (offset >= BLOCK_SIZE_BYTES * iNode->numBlocks) {
-        return -1;
+    if (offset + size >= iNode->fileSize) { // filesize --> user size, not real
+        size -= (offset - iNode->fileSize > 0) ? size : (offset + size) - iNode->fileSize;
     }
 
 	// reading cycle
@@ -346,8 +346,8 @@ static int my_read(const char *path, char *buf, size_t size, off_t offset, struc
         for (int i = bgReadBlock; (i < BLOCK_SIZE_BYTES) && (numBytesRead < size); i++) {
             // we copy the data on the buffer using the offset, and increment said offset by 1
             // for the next byte to read
-            buf[offset++] = auxBuffer[i];
-            numBytesRead++;
+            buf[numBytesRead++] = auxBuffer[i];
+            offset++;
         }
     }
     
@@ -545,7 +545,7 @@ static int my_unlink(const char *path)
     fprintf(stderr, "--->>>my_unlink: path %s\n", path);
 
     // find the soon-to-be-deleted file
-	int fileIdx = findFileByName(&myFileSystem, path);
+	int fileIdx = findFileByName(&myFileSystem, path + 1);
 
     // if it doesn't exist, return -1
     if (fileIdx == -1)

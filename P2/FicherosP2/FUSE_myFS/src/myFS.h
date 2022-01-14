@@ -27,7 +27,6 @@
 #define DIRECTORY_IDX 2
 #define NODES_IDX 3
 
-
 // STRUCTS
 typedef struct FileStructure {
     int  nodeIdx;                         	// Associated i-node
